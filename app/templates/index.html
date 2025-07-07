@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Operating Budgets</h1>
+<form id="create-form" hx-post="/budgets" hx-target="#budgets-table" hx-swap="beforeend">
+  <input type="number" name="fiscal_year" placeholder="Fiscal Year" required/>
+  <input type="text" name="fund_code" placeholder="Fund Code" required/>
+  <input type="text" name="program_code" placeholder="Program Code" required/>
+  <input type="text" name="account" placeholder="Account" required/>
+  <input type="text" name="deptid" placeholder="Dept ID" required/>
+  <input type="text" name="operating_unit" placeholder="Operating Unit" required/>
+  <input type="text" name="class" placeholder="Class" required/>
+  <input type="text" name="project_id" placeholder="Project ID" required/>
+  <input type="number" step="0.01" name="budget_amount" placeholder="Amount" required/>
+  <input type="text" name="descr" placeholder="Description" required/>
+  <button type="submit">Add</button>
+</form>
+<table border="1">
+  <thead>
+    <tr>
+      <th>FY</th><th>Fund</th><th>Program</th><th>Account</th><th>Dept</th>
+      <th>Unit</th><th>Class</th><th>Project</th><th>Amount</th><th>Descr</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="budgets-table">
+    {% for budget in budgets %}
+      {% include "budget_row.html" %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,18 @@
+<tr id="budget-{{ budget.id }}">
+  <form hx-put="/budgets/{{ budget.id }}" hx-target="#budget-{{ budget.id }}" hx-swap="outerHTML">
+    <td><input type="number" name="fiscal_year" value="{{ budget.fiscal_year }}" required/></td>
+    <td><input type="text" name="fund_code" value="{{ budget.fund_code }}" required/></td>
+    <td><input type="text" name="program_code" value="{{ budget.program_code }}" required/></td>
+    <td><input type="text" name="account" value="{{ budget.account }}" required/></td>
+    <td><input type="text" name="deptid" value="{{ budget.deptid }}" required/></td>
+    <td><input type="text" name="operating_unit" value="{{ budget.operating_unit }}" required/></td>
+    <td><input type="text" name="class" value="{{ budget.class_ }}" required/></td>
+    <td><input type="text" name="project_id" value="{{ budget.project_id }}" required/></td>
+    <td><input type="number" step="0.01" name="budget_amount" value="{{ budget.budget_amount }}" required/></td>
+    <td><input type="text" name="descr" value="{{ budget.descr }}" required/></td>
+    <td>
+      <button type="submit">Save</button>
+      <button type="button" hx-get="/budgets/{{ budget.id }}/cancel" hx-target="#budget-{{ budget.id }}" hx-swap="outerHTML">Cancel</button>
+    </td>
+  </form>
+</tr>
