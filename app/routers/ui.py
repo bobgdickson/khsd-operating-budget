@@ -12,61 +12,51 @@ try:
 
     templates = Jinja2Templates(directory="app/templates")
 
-    from typing import Optional
-    from fastapi import Query
-
     @router.get("/", response_class=HTMLResponse)
-    def index(
-        request: Request,
-        db: Session = Depends(get_db),
-        fiscal_year: Optional[int] = Query(None),
-        fund_code: Optional[str] = Query(None),
-        program_code: Optional[str] = Query(None),
-        account: Optional[str] = Query(None),
-        deptid: Optional[str] = Query(None),
-        operating_unit: Optional[str] = Query(None),
-        class_: Optional[str] = Query(None, alias="class"),
-        project_id: Optional[str] = Query(None),
-        budget_amount: Optional[float] = Query(None),
-        descr: Optional[str] = Query(None),
-    ):
+    def index(request: Request, db: Session = Depends(get_db)):
+        params = request.query_params
         budgets = crud.get_budgets(db, skip=0, limit=None)
-        if fiscal_year is not None:
-            budgets = [b for b in budgets if b.fiscal_year == fiscal_year]
-        if fund_code:
-            budgets = [b for b in budgets if fund_code.lower() in b.fund_code.lower()]
-        if program_code:
-            budgets = [b for b in budgets if program_code.lower() in b.program_code.lower()]
-        if account:
-            budgets = [b for b in budgets if account.lower() in b.account.lower()]
-        if deptid:
-            budgets = [b for b in budgets if deptid.lower() in b.deptid.lower()]
-        if operating_unit:
-            budgets = [b for b in budgets if operating_unit.lower() in b.operating_unit.lower()]
-        if class_:
-            budgets = [b for b in budgets if class_.lower() in b.class_.lower()]
-        if project_id:
-            budgets = [b for b in budgets if project_id.lower() in b.project_id.lower()]
-        if budget_amount is not None:
-            budgets = [b for b in budgets if b.budget_amount == budget_amount]
-        if descr:
-            budgets = [b for b in budgets if descr.lower() in b.descr.lower()]
+        # apply simple in-memory filters based on query_params
+        fy = params.get("fiscal_year")
+        if fy:
+            try:
+                budgets = [b for b in budgets if b.fiscal_year == int(fy)]
+            except ValueError:
+                pass
+        fc = params.get("fund_code")
+        if fc:
+            budgets = [b for b in budgets if fc.lower() in b.fund_code.lower()]
+        pc = params.get("program_code")
+        if pc:
+            budgets = [b for b in budgets if pc.lower() in b.program_code.lower()]
+        ac = params.get("account")
+        if ac:
+            budgets = [b for b in budgets if ac.lower() in b.account.lower()]
+        did = params.get("deptid")
+        if did:
+            budgets = [b for b in budgets if did.lower() in b.deptid.lower()]
+        ou = params.get("operating_unit")
+        if ou:
+            budgets = [b for b in budgets if ou.lower() in b.operating_unit.lower()]
+        cl = params.get("class")
+        if cl:
+            budgets = [b for b in budgets if cl.lower() in b.class_.lower()]
+        pid = params.get("project_id")
+        if pid:
+            budgets = [b for b in budgets if pid.lower() in b.project_id.lower()]
+        ba = params.get("budget_amount")
+        if ba:
+            try:
+                budgets = [b for b in budgets if b.budget_amount == float(ba)]
+            except ValueError:
+                pass
+        ds = params.get("descr")
+        if ds:
+            budgets = [b for b in budgets if ds.lower() in b.descr.lower()]
 
         # Determine whether to render full page or just the table rows fragment.
         is_htmx = bool(request.headers.get("hx-request"))
-        # If this is an htmx request (filter/update/delete/create) or any filter param is set, return rows-only.
-        has_filter = any([
-            fiscal_year is not None,
-            fund_code,
-            program_code,
-            account,
-            deptid,
-            operating_unit,
-            class_,
-            project_id,
-            budget_amount is not None,
-            descr,
-        ])
+        has_filter = any(request.query_params)
         template_name = "budget_rows.html" if (is_htmx or has_filter) else "index.html"
         return templates.TemplateResponse(
             template_name, {"request": request, "budgets": budgets}
