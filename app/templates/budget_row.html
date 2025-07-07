@@ -7,7 +7,7 @@
   <td>{{ budget.operating_unit }}</td>
   <td>{{ budget.class_ }}</td>
   <td>{{ budget.project_id }}</td>
-  <td>{{ budget.budget_amount }}</td>
+  <td>{{ "{:,.2f}".format(budget.budget_amount) }}</td>
   <td>{{ budget.descr }}</td>
   <td>
     <button hx-get="/budgets/{{ budget.id }}/edit" hx-target="#budget-{{ budget.id }}" hx-swap="outerHTML">Edit</button>

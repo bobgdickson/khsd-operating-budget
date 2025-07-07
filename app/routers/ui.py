@@ -12,11 +12,53 @@ try:
 
     templates = Jinja2Templates(directory="app/templates")
 
+    from typing import Optional
+    from fastapi import Query
+
     @router.get("/", response_class=HTMLResponse)
-    def index(request: Request, db: Session = Depends(get_db)):
-        budgets = crud.get_budgets(db)
+    def index(
+        request: Request,
+        db: Session = Depends(get_db),
+        fiscal_year: Optional[int] = Query(None),
+        fund_code: Optional[str] = Query(None),
+        program_code: Optional[str] = Query(None),
+        account: Optional[str] = Query(None),
+        deptid: Optional[str] = Query(None),
+        operating_unit: Optional[str] = Query(None),
+        class_: Optional[str] = Query(None, alias="class"),
+        project_id: Optional[str] = Query(None),
+        budget_amount: Optional[float] = Query(None),
+        descr: Optional[str] = Query(None),
+    ):
+        budgets = crud.get_budgets(db, skip=0, limit=None)
+        if fiscal_year is not None:
+            budgets = [b for b in budgets if b.fiscal_year == fiscal_year]
+        if fund_code:
+            budgets = [b for b in budgets if fund_code.lower() in b.fund_code.lower()]
+        if program_code:
+            budgets = [b for b in budgets if program_code.lower() in b.program_code.lower()]
+        if account:
+            budgets = [b for b in budgets if account.lower() in b.account.lower()]
+        if deptid:
+            budgets = [b for b in budgets if deptid.lower() in b.deptid.lower()]
+        if operating_unit:
+            budgets = [b for b in budgets if operating_unit.lower() in b.operating_unit.lower()]
+        if class_:
+            budgets = [b for b in budgets if class_.lower() in b.class_.lower()]
+        if project_id:
+            budgets = [b for b in budgets if project_id.lower() in b.project_id.lower()]
+        if budget_amount is not None:
+            budgets = [b for b in budgets if b.budget_amount == budget_amount]
+        if descr:
+            budgets = [b for b in budgets if descr.lower() in b.descr.lower()]
+
+        template = (
+            "budget_rows.html"
+            if request.headers.get("hx-request", False)
+            else "index.html"
+        )
         return templates.TemplateResponse(
-            "index.html", {"request": request, "budgets": budgets}
+            template, {"request": request, "budgets": budgets}
         )
 
     @router.post("/budgets", response_class=HTMLResponse)

@@ -5,8 +5,16 @@ from . import models, schemas
 def get_budget(db: Session, budget_id: int):
     return db.query(models.OperatingBudget).filter(models.OperatingBudget.id == budget_id).first()
 
-def get_budgets(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.OperatingBudget).order_by(models.OperatingBudget.id).offset(skip).limit(limit).all()
+from typing import Optional
+
+def get_budgets(db: Session, skip: int = 0, limit: Optional[int] = None):
+    """
+    Retrieve budgets with optional pagination. If limit is None, no LIMIT clause is applied.
+    """
+    query = db.query(models.OperatingBudget).order_by(models.OperatingBudget.id).offset(skip)
+    if limit is not None:
+        query = query.limit(limit)
+    return query.all()
 
 def create_budget(db: Session, budget: schemas.OperatingBudgetCreate):
     db_budget = models.OperatingBudget(**budget.dict())
