@@ -52,13 +52,24 @@ try:
         if descr:
             budgets = [b for b in budgets if descr.lower() in b.descr.lower()]
 
-        template = (
-            "budget_rows.html"
-            if request.headers.get("hx-request", False)
-            else "index.html"
-        )
+        # Determine whether to render full page or just the table rows fragment.
+        is_htmx = bool(request.headers.get("hx-request"))
+        # If this is an htmx request (filter/update/delete/create) or any filter param is set, return rows-only.
+        has_filter = any([
+            fiscal_year is not None,
+            fund_code,
+            program_code,
+            account,
+            deptid,
+            operating_unit,
+            class_,
+            project_id,
+            budget_amount is not None,
+            descr,
+        ])
+        template_name = "budget_rows.html" if (is_htmx or has_filter) else "index.html"
         return templates.TemplateResponse(
-            template, {"request": request, "budgets": budgets}
+            template_name, {"request": request, "budgets": budgets}
         )
 
     @router.post("/budgets", response_class=HTMLResponse)
