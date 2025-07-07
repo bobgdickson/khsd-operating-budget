@@ -19,10 +19,8 @@ try:
         # apply simple in-memory filters based on query_params
         fy = params.get("fiscal_year")
         if fy:
-            try:
-                budgets = [b for b in budgets if b.fiscal_year == int(fy)]
-            except ValueError:
-                pass
+            # match year as substring to avoid type coercion issues
+            budgets = [b for b in budgets if fy in str(b.fiscal_year)]
         fc = params.get("fund_code")
         if fc:
             budgets = [b for b in budgets if fc.lower() in b.fund_code.lower()]
@@ -56,7 +54,8 @@ try:
 
         # Determine whether to render full page or just the table rows fragment.
         is_htmx = bool(request.headers.get("hx-request"))
-        has_filter = any(request.query_params)
+        # Only treat as filter if at least one non-empty param value is provided
+        has_filter = any(v for v in request.query_params.values())
         template_name = "budget_rows.html" if (is_htmx or has_filter) else "index.html"
         return templates.TemplateResponse(
             template_name, {"request": request, "budgets": budgets}
