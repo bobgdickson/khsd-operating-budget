@@ -1,0 +1,9 @@
+services:
+  khsd-operating-budget-api:
+    image: ghcr.io/bobgdickson/khsd-operating-budget
+    container_name: khsd-operating-budget-api
+    ports:
+      - "8002:8000"
+    env_file:
+      - .env
+    restart: unless-stopped

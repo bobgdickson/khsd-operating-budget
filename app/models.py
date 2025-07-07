@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, Float
 from .database import Base
 
 class OperatingBudget(Base):
-    __tablename__ = "OPERATING_BUDGETS"
+    __tablename__ = "OPERATING_BUDGET"
 
     id = Column("ID", Integer, primary_key=True, index=True)
     fiscal_year = Column("FISCAL_YEAR", Integer, index=True)

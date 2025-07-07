@@ -17,7 +17,8 @@ def create_budget(budget: schemas.OperatingBudgetCreate, db: Session = Depends(g
 
 @router.get("/", response_model=List[schemas.OperatingBudget])
 def read_budgets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return crud.get_budgets(db, skip, limit)
+    orm_objs = crud.get_budgets(db, skip, limit)
+    return [schemas.OperatingBudget.model_validate(obj) for obj in orm_objs]
 
 @router.get("/{budget_id}", response_model=schemas.OperatingBudget)
 def read_budget(budget_id: int, db: Session = Depends(get_db)):

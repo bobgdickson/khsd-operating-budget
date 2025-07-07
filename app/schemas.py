@@ -11,10 +11,11 @@ class OperatingBudgetBase(BaseModel):
     project_id: str
     budget_amount: float
     descr: str
-
-    class Config:
-        allow_population_by_field_name = True
-        orm_mode = True
+    
+    model_config = {
+        "from_attributes": True,
+        "populate_by_name": True,  # same as allow_population_by_field_name
+    }
 
 class OperatingBudgetCreate(OperatingBudgetBase):
     pass
