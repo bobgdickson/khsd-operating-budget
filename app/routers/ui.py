@@ -42,6 +42,12 @@ try:
         pid = params.get("project_id")
         if pid:
             budgets = [b for b in budgets if pid.lower() in b.project_id.lower()]
+        vid = params.get("vendor_id")
+        if vid:
+            budgets = [b for b in budgets if vid.lower() in b.vendor_id.lower()]
+        nm = params.get("name")
+        if nm:
+            budgets = [b for b in budgets if nm.lower() in b.name.lower()]
         ba = params.get("budget_amount")
         if ba:
             try:

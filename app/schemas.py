@@ -11,6 +11,8 @@ class OperatingBudgetBase(BaseModel):
     project_id: str
     budget_amount: float
     descr: str
+    vendor_id: str
+    name: str
     
     model_config = {
         "from_attributes": True,
