@@ -1,0 +1,5 @@
+<form id="bulk-upload-form" hx-post="/budgets/bulk_upload/preview" hx-target="#bulk-preview-container" hx-swap="innerHTML" enctype="multipart/form-data">
+  <input type="file" name="file" accept=".xls,.xlsx" required/>
+  <button type="submit">Preview</button>
+  <button type="button" hx-get="/budgets/bulk_upload/cancel" hx-target="#bulk-upload-container" hx-swap="innerHTML">Cancel</button>
+</form>

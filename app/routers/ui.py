@@ -5,10 +5,12 @@ from app.database import get_db
 router = APIRouter()
 
 try:
-    from fastapi import Depends, Request, Form
+    from fastapi import Depends, Request, Form, UploadFile, File
     from fastapi.responses import HTMLResponse
     from fastapi.templating import Jinja2Templates
     from sqlalchemy.orm import Session
+    import pandas as pd
+    import json
 
     templates = Jinja2Templates(directory="app/templates")
 
@@ -144,6 +146,40 @@ try:
     def delete_budget_ui(request: Request, budget_id: int, db: Session = Depends(get_db)):
         crud.delete_budget(db, budget_id)
         return HTMLResponse("")
+
+    @router.get("/budgets/bulk_upload", response_class=HTMLResponse)
+    def bulk_upload_form(request: Request):
+        return templates.TemplateResponse("bulk_upload_form.html", {"request": request})
+
+    @router.post("/budgets/bulk_upload/preview", response_class=HTMLResponse)
+    def bulk_upload_preview(request: Request, file: UploadFile = File(...)):
+        df = pd.read_excel(file.file)
+        rows = df.to_dict(orient="records")
+        headers = list(df.columns)
+        rows_json = json.dumps(rows)
+        return templates.TemplateResponse(
+            "bulk_upload_preview.html",
+            {"request": request, "headers": headers, "rows": rows, "rows_json": rows_json},
+        )
+
+    @router.post("/budgets/bulk_upload", response_class=HTMLResponse)
+    def bulk_upload(request: Request, rows_json: str = Form(...), db: Session = Depends(get_db)):
+        rows = json.loads(rows_json)
+        created = []
+        for row in rows:
+            if "class" in row:
+                row["class_"] = row.pop("class")
+            budget_in = schemas.OperatingBudgetCreate(**row)
+            budget = crud.create_budget(db, budget_in)
+            created.append(budget)
+        return templates.TemplateResponse(
+            "budget_rows.html", {"request": request, "budgets": created}
+        )
+
+    @router.get("/budgets/bulk_upload/cancel", response_class=HTMLResponse)
+    def bulk_upload_cancel(request: Request):
+        return HTMLResponse("")
+
 except ImportError:
     # Templating dependencies not available; skip UI routes
     pass

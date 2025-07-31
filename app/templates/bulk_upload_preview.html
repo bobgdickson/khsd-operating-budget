@@ -1,0 +1,23 @@
+<form id="bulk-upload-confirm-form" hx-post="/budgets/bulk_upload" hx-target="#budgets-table" hx-swap="beforeend">
+  <textarea name="rows_json" hidden>{{ rows_json }}</textarea>
+  <button type="submit">Confirm Upload</button>
+  <button type="button" hx-get="/budgets/bulk_upload/cancel" hx-target="#bulk-preview-container" hx-swap="innerHTML">Cancel</button>
+</form>
+<table border="1">
+  <thead>
+    <tr>
+      {% for h in headers %}
+      <th>{{ h }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      {% for h in headers %}
+      <td>{{ row[h] }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

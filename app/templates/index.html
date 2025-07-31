@@ -28,11 +28,16 @@
   <input type="text" name="descr" placeholder="Description" required/>
   <button type="submit">Add</button>
 </form>
+
+<button type="button" hx-get="/budgets/bulk_upload" hx-target="#bulk-upload-container" hx-swap="innerHTML">Bulk Upload</button>
+<div id="bulk-upload-container"></div>
+<div id="bulk-preview-container"></div>
+
 <table border="1">
   <thead>
     <tr>
       <th>FY</th><th>Fund</th><th>Program</th><th>Account</th><th>Dept</th>
-      <th>Unit</th><th>Class</th><th>Project</th><th>Vendor</th><th>Name</th><th>Amount</th><th>Descr</th><th>Actions</th>
+      <th>Unit</th><th>Class</th><th>Project</th><th>Amount</th><th>Descr</th><th>Actions</th>
     </tr>
   </thead>
   <tbody id="budgets-table">

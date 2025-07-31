@@ -14,6 +14,7 @@ cp .env.example .env
 
 ```bash
 pip install -r requirements.txt
+pip install pandas openpyxl
 ```
 
 ## Running the app
