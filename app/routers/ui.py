@@ -17,11 +17,33 @@ try:
     @router.get("/", response_class=HTMLResponse)
     def index(request: Request, db: Session = Depends(get_db)):
         params = request.query_params
+        # Determine whether this is an HTMX request or a filter apply
+        is_htmx = bool(request.headers.get("hx-request"))
+        has_filter = any(v for v in params.values())
+
+        # Default initial view (no HTMX, no filters): only show the latest fiscal year
+        if not is_htmx and not has_filter:
+            from sqlalchemy import func
+            from app.models import OperatingBudget
+
+            latest_year = db.query(func.max(OperatingBudget.fiscal_year)).scalar()
+            if latest_year is not None:
+                budgets = (
+                    db.query(OperatingBudget)
+                    .filter(OperatingBudget.fiscal_year == latest_year)
+                    .order_by(OperatingBudget.id)
+                    .all()
+                )
+            else:
+                budgets = []
+            return templates.TemplateResponse(
+                "index.html", {"request": request, "budgets": budgets}
+            )
+
+        # Otherwise load all and apply any simple in-memory filters
         budgets = crud.get_budgets(db, skip=0, limit=None)
-        # apply simple in-memory filters based on query_params
         fy = params.get("fiscal_year")
         if fy:
-            # match year as substring to avoid type coercion issues
             budgets = [b for b in budgets if fy in str(b.fiscal_year)]
         fc = params.get("fund_code")
         if fc:
@@ -54,10 +76,6 @@ try:
         if ds:
             budgets = [b for b in budgets if ds.lower() in b.descr.lower()]
 
-        # Determine whether to render full page or just the table rows fragment.
-        is_htmx = bool(request.headers.get("hx-request"))
-        # Only treat as filter if at least one non-empty param value is provided
-        has_filter = any(v for v in request.query_params.values())
         template_name = "budget_rows.html" if (is_htmx or has_filter) else "index.html"
         return templates.TemplateResponse(
             template_name, {"request": request, "budgets": budgets}
