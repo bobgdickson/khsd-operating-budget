@@ -16,5 +16,3 @@ class OperatingBudget(Base):
     project_id = Column("PROJECT_ID", String, index=True)
     budget_amount = Column("BUDGET_AMOUNT", Float)
     descr = Column("DESCR", String, index=True)
-    vendor_id = Column("VENDOR_ID", String, index=True)
-    name = Column("NAME", String, index=True)

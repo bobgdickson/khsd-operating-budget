@@ -9,8 +9,6 @@ def test_budget_crud(client):
         "operating_unit": "OU500",
         "class": "CL600",
         "project_id": "PJ700",
-        "vendor_id": "VEND123",
-        "name": "Vendor Name",
         "budget_amount": 1000.50,
         "descr": "Initial budget",
     }
