@@ -8,8 +8,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Operating Budget API")
 
-app.include_router(budgets.router)
-
+# Include HTMX-driven UI routes first so they take precedence over the budgets API
 try:
     from fastapi.templating import Jinja2Templates
     from app.routers import ui
@@ -19,3 +18,6 @@ try:
 except ImportError:
     # Templating dependencies not available; skip UI
     pass
+
+# Include the RESTful budgets API
+app.include_router(budgets.router)
