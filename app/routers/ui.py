@@ -171,7 +171,10 @@ try:
 
     @router.post("/budgets/bulk_upload/preview", response_class=HTMLResponse)
     def bulk_upload_preview(request: Request, file: UploadFile = File(...)):
-        df = pd.read_excel(file.file)
+        df = pd.read_excel(file.file, dtype=str)
+        df.columns = [col.strip().lower() for col in df.columns]
+        # rename "class" to "class_" for Pydantic parsing
+        df = df.rename(columns={"class": "class_"})
         rows = df.to_dict(orient="records")
         headers = list(df.columns)
         rows_json = json.dumps(rows)
@@ -187,7 +190,7 @@ try:
         for row in rows:
             if "class" in row:
                 row["class_"] = row.pop("class")
-            budget_in = schemas.OperatingBudgetCreate(**row)
+            budget_in = schemas.OperatingBudgetCreate.model_validate(row)
             budget = crud.create_budget(db, budget_in)
             created.append(budget)
         return templates.TemplateResponse(
