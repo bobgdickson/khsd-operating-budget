@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.database import engine, Base
-from app.routers import budgets
+from app.routers import budgets, supplier_budgets
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -21,3 +21,4 @@ except ImportError:
 
 # Include the RESTful budgets API
 app.include_router(budgets.router)
+app.include_router(supplier_budgets.router)

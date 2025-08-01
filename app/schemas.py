@@ -24,7 +24,7 @@ class OperatingBudgetCreate(OperatingBudgetBase):
 class OperatingBudget(OperatingBudgetBase):
     id: int
 
-class SupplierBudgetCreate(BaseModel):
+class SupplierBudgetBase(BaseModel):
     vendor_id: Optional[str] = None
     descr: Optional[str] = None
     fiscal_year: str
@@ -35,9 +35,15 @@ class SupplierBudgetCreate(BaseModel):
     operating_unit: str
     project_id: Optional[str] = None
     business_unit: Optional[str] = None
-    period: Optional[str] = None
     amount: float
-    descr: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True,
+        "populate_by_name": True,
+    }
+
+class SupplierBudgetCreate(SupplierBudgetBase):
+    pass
+
+class SupplierBudget(SupplierBudgetBase):
+    id: int

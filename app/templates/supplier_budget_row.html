@@ -1,0 +1,17 @@
+<tr id="supplier-budget-{{ budget.id }}">
+  <td>{{ budget.vendor_id }}</td>
+  <td>{{ budget.descr }}</td>
+  <td>{{ budget.fiscal_year }}</td>
+  <td>{{ budget.fund_code }}</td>
+  <td>{{ budget.program_code }}</td>
+  <td>{{ budget.account }}</td>
+  <td>{{ budget.deptid }}</td>
+  <td>{{ budget.operating_unit }}</td>
+  <td>{{ budget.project_id }}</td>
+  <td>{{ budget.business_unit }}</td>
+  <td>{{ "{:,.2f}".format(budget.amount) }}</td>
+  <td>
+    <button hx-get="/supplier_budgets/{{ budget.id }}/edit" hx-target="#supplier-budget-{{ budget.id }}" hx-swap="outerHTML">Edit</button>
+    <button hx-delete="/supplier_budgets/{{ budget.id }}" hx-target="#supplier-budget-{{ budget.id }}" hx-swap="outerHTML" hx-confirm="Are you sure?">Delete</button>
+  </td>
+</tr>
