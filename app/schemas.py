@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional
 
 class OperatingBudgetBase(BaseModel):
     fiscal_year: int
@@ -22,3 +23,21 @@ class OperatingBudgetCreate(OperatingBudgetBase):
 
 class OperatingBudget(OperatingBudgetBase):
     id: int
+
+class SupplierBudgetCreate(BaseModel):
+    vendor_id: Optional[str] = None
+    descr: Optional[str] = None
+    fiscal_year: str
+    fund_code: str
+    program_code: str
+    account: str
+    deptid: str
+    operating_unit: str
+    project_id: Optional[str] = None
+    business_unit: Optional[str] = None
+    period: Optional[str] = None
+    amount: float
+    descr: Optional[str] = None
+
+    class Config:
+        orm_mode = True
