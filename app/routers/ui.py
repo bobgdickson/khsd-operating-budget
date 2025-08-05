@@ -376,8 +376,8 @@ try:
             df["fund_code"] = df["fund_code"].apply(lambda x: x.zfill(2) if isinstance(x, str) else x)
         if "program_code" in df.columns:
             df["program_code"] = df["program_code"].apply(lambda x: x.zfill(4) if isinstance(x, str) else x)
-        rows = df.to_dict(orient="records")
         df.fillna("", inplace=True)  # fill NaNs with empty strings
+        rows = df.to_dict(orient="records")
         headers = list(df.columns)
         rows_json = json.dumps(rows)
         return templates.TemplateResponse(
