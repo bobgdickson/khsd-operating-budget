@@ -175,6 +175,7 @@ try:
         df.columns = [col.strip().lower() for col in df.columns]
         # rename "class" to "class_" for Pydantic parsing
         df = df.rename(columns={"class": "class_"})
+        df.fillna("", inplace=True)  # fill NaNs with empty strings
         rows = df.to_dict(orient="records")
         headers = list(df.columns)
         rows_json = json.dumps(rows)
@@ -366,6 +367,7 @@ try:
         df = pd.read_excel(file.file, dtype=str)
         df.columns = [col.strip().lower() for col in df.columns]
         rows = df.to_dict(orient="records")
+        df.fillna("", inplace=True)  # fill NaNs with empty strings
         headers = list(df.columns)
         rows_json = json.dumps(rows)
         return templates.TemplateResponse(
