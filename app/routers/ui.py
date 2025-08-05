@@ -175,6 +175,11 @@ try:
         df.columns = [col.strip().lower() for col in df.columns]
         # rename "class" to "class_" for Pydantic parsing
         df = df.rename(columns={"class": "class_"})
+        # Ensure fund_code is two digits and program_code is four digits (pad with leading zeros)
+        if "fund_code" in df.columns:
+            df["fund_code"] = df["fund_code"].apply(lambda x: x.zfill(2) if isinstance(x, str) else x)
+        if "program_code" in df.columns:
+            df["program_code"] = df["program_code"].apply(lambda x: x.zfill(4) if isinstance(x, str) else x)
         df.fillna("", inplace=True)  # fill NaNs with empty strings
         rows = df.to_dict(orient="records")
         headers = list(df.columns)
@@ -366,6 +371,11 @@ try:
     def supplier_bulk_upload_preview(request: Request, file: UploadFile = File(...)):
         df = pd.read_excel(file.file, dtype=str)
         df.columns = [col.strip().lower() for col in df.columns]
+        # Ensure fund_code is two digits and program_code is four digits (pad with leading zeros)
+        if "fund_code" in df.columns:
+            df["fund_code"] = df["fund_code"].apply(lambda x: x.zfill(2) if isinstance(x, str) else x)
+        if "program_code" in df.columns:
+            df["program_code"] = df["program_code"].apply(lambda x: x.zfill(4) if isinstance(x, str) else x)
         rows = df.to_dict(orient="records")
         df.fillna("", inplace=True)  # fill NaNs with empty strings
         headers = list(df.columns)
