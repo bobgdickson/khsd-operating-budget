@@ -20,26 +20,7 @@ try:
         params = request.query_params
         is_htmx = bool(request.headers.get("hx-request"))
         has_filter = any(v for v in params.values())
-
-        if not is_htmx and not has_filter:
-            from sqlalchemy import func
-            from app.models import ConstructionBudget
-
-            latest_period = db.query(func.max(ConstructionBudget.budget_period)).scalar()
-            if latest_period is not None:
-                cons_budgets = (
-                    db.query(ConstructionBudget)
-                    .filter(ConstructionBudget.budget_period == latest_period)
-                    .order_by(ConstructionBudget.id)
-                    .all()
-                )
-            else:
-                cons_budgets = []
-            return templates.TemplateResponse(
-                "construction_index.html", {"request": request, "construction_budgets": cons_budgets}
-            )
-
-        cons_budgets = crud.get_construction_budgets(db, skip=0, limit=None)
+        cons_budgets = crud.get_construction_budgets(db, skip=0, limit=100)
         bp = params.get("budget_period")
         if bp:
             cons_budgets = [b for b in cons_budgets if b.budget_period and bp.lower() in b.budget_period.lower()]
