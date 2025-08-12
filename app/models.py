@@ -32,3 +32,16 @@ class SupplierBudget(Base):
     project_id = Column("PROJECT_ID", String(26), nullable=True, index=True)
     business_unit = Column("BUSINESS_UNIT", String(5), nullable=True, index=True)
     amount = Column("AMOUNT", Numeric(10, 2), nullable=True)
+
+class ConstructionBudget(Base):
+    __tablename__ = "CONSTRUCTION_BUDGET"
+
+    id = Column("ID", Integer, primary_key=True, index=True)
+    budget_period = Column("BUDGET_PERIOD", String(4), nullable=True, index=True)
+    fund_code = Column("FUND_CODE", String(4), nullable=True, index=True)
+    program_code = Column("PROGRAM_CODE", String(4), nullable=True, index=True)
+    project_id = Column("PROJECT_ID", String(26), nullable=True, index=True)
+    activity_id = Column("ACTIVITY_ID", String(20), nullable=True, index=True)
+    line_descr = Column("LINE_DESCR", String(255), nullable=True)
+    monetary_amount = Column("MONETARY_AMOUNT", Numeric(18, 2), nullable=True)
+    

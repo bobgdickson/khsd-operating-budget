@@ -47,3 +47,26 @@ class SupplierBudgetCreate(SupplierBudgetBase):
 
 class SupplierBudget(SupplierBudgetBase):
     id: int
+
+
+class ConstructionBudgetBase(BaseModel):
+    budget_period: Optional[str] = None
+    fund_code: Optional[str] = None
+    program_code: Optional[str] = None
+    project_id: Optional[str] = None
+    activity_id: Optional[str] = None
+    line_descr: Optional[str] = None
+    monetary_amount: Optional[float] = None
+
+    model_config = {
+        "from_attributes": True,
+        "populate_by_name": True,
+    }
+
+
+class ConstructionBudgetCreate(ConstructionBudgetBase):
+    pass
+
+
+class ConstructionBudget(ConstructionBudgetBase):
+    id: int

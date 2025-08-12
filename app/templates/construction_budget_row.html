@@ -1,0 +1,13 @@
+<tr id="construction-budget-{{ budget.id }}">
+  <td>{{ budget.budget_period }}</td>
+  <td>{{ budget.fund_code }}</td>
+  <td>{{ budget.program_code }}</td>
+  <td>{{ budget.project_id }}</td>
+  <td>{{ budget.activity_id }}</td>
+  <td>{{ budget.line_descr }}</td>
+  <td>{{ "{:,.2f}".format(budget.monetary_amount or 0) }}</td>
+  <td>
+    <button hx-get="/construction_budgets/{{ budget.id }}/edit" hx-target="#construction-budget-{{ budget.id }}" hx-swap="outerHTML">Edit</button>
+    <button hx-delete="/construction_budgets/{{ budget.id }}" hx-target="#construction-budget-{{ budget.id }}" hx-swap="outerHTML" hx-confirm="Are you sure?">Delete</button>
+  </td>
+</tr>

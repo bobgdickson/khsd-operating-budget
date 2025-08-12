@@ -77,3 +77,46 @@ def delete_supplier_budget(db: Session, supplier_budget_id: int):
     db.delete(db_supplier_budget)
     db.commit()
     return db_supplier_budget
+
+
+def get_construction_budget(db: Session, construction_budget_id: int):
+    return (
+        db.query(models.ConstructionBudget)
+        .filter(models.ConstructionBudget.id == construction_budget_id)
+        .first()
+    )
+
+
+def get_construction_budgets(db: Session, skip: int = 0, limit: Optional[int] = None):
+    query = db.query(models.ConstructionBudget).order_by(models.ConstructionBudget.id).offset(skip)
+    if limit is not None:
+        query = query.limit(limit)
+    return query.all()
+
+
+def create_construction_budget(db: Session, construction_budget: schemas.ConstructionBudgetCreate):
+    db_obj = models.ConstructionBudget(**construction_budget.dict())
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+
+def update_construction_budget(db: Session, construction_budget_id: int, construction_budget: schemas.ConstructionBudgetCreate):
+    db_obj = get_construction_budget(db, construction_budget_id)
+    if not db_obj:
+        return None
+    for key, value in construction_budget.dict().items():
+        setattr(db_obj, key, value)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+
+def delete_construction_budget(db: Session, construction_budget_id: int):
+    db_obj = get_construction_budget(db, construction_budget_id)
+    if not db_obj:
+        return None
+    db.delete(db_obj)
+    db.commit()
+    return db_obj
