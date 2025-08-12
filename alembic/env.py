@@ -34,6 +34,7 @@ def include_object(object, name, type_, reflected, compare_to):
         and (
             name.upper().startswith("OPERATING_BUDGET")
             or name.upper().startswith("SUPPLIER_BUDGET")
+            or name.upper().startswith("CONSTRUCTION_BUDGET")
         )
     )
 
