@@ -177,7 +177,7 @@ try:
     @router.post("/supplier_budgets/bulk_upload/preview", response_class=HTMLResponse)
     def supplier_bulk_upload_preview(request: Request, file: UploadFile = File(...)):
         df = pd.read_excel(file.file, dtype=str)
-        df.columns = [col.strip().lower() for col in df.columns]
+        df.columns = [str(col).strip().lower() for col in df.columns]
         if "fund_code" in df.columns:
             df["fund_code"] = df["fund_code"].apply(lambda x: x.zfill(2) if isinstance(x, str) else x)
         if "program_code" in df.columns:
