@@ -20,7 +20,7 @@ try:
         params = request.query_params
         is_htmx = bool(request.headers.get("hx-request"))
         has_filter = any(v for v in params.values())
-        cons_budgets = crud.get_construction_budgets(db, skip=0, limit=100)
+        cons_budgets = crud.get_construction_budgets(db, skip=0, limit=None)
         bp = params.get("budget_period")
         if bp:
             bp_value = bp.lower()
