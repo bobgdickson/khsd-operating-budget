@@ -23,22 +23,52 @@ try:
         cons_budgets = crud.get_construction_budgets(db, skip=0, limit=100)
         bp = params.get("budget_period")
         if bp:
-            cons_budgets = [b for b in cons_budgets if b.budget_period and bp.lower() in b.budget_period.lower()]
+            bp_value = bp.lower()
+            cons_budgets = [
+                b
+                for b in cons_budgets
+                if b.budget_period and bp_value in str(b.budget_period).lower()
+            ]
         fc = params.get("fund_code")
         if fc:
-            cons_budgets = [b for b in cons_budgets if b.fund_code and fc.lower() in b.fund_code.lower()]
+            fc_value = fc.lower()
+            cons_budgets = [
+                b
+                for b in cons_budgets
+                if b.fund_code and fc_value in str(b.fund_code).lower()
+            ]
         pc = params.get("program_code")
         if pc:
-            cons_budgets = [b for b in cons_budgets if b.program_code and pc.lower() in b.program_code.lower()]
+            pc_value = pc.lower()
+            cons_budgets = [
+                b
+                for b in cons_budgets
+                if b.program_code and pc_value in str(b.program_code).lower()
+            ]
         pid = params.get("project_id")
         if pid:
-            cons_budgets = [b for b in cons_budgets if b.project_id and pid.lower() in b.project_id.lower()]
+            pid_value = pid.lower()
+            cons_budgets = [
+                b
+                for b in cons_budgets
+                if b.project_id and pid_value in str(b.project_id).lower()
+            ]
         aid = params.get("activity_id")
         if aid:
-            cons_budgets = [b for b in cons_budgets if b.activity_id and aid.lower() in b.activity_id.lower()]
+            aid_value = aid.lower()
+            cons_budgets = [
+                b
+                for b in cons_budgets
+                if b.activity_id and aid_value in str(b.activity_id).lower()
+            ]
         la = params.get("line_descr")
         if la:
-            cons_budgets = [b for b in cons_budgets if b.line_descr and la.lower() in b.line_descr.lower()]
+            la_value = la.lower()
+            cons_budgets = [
+                b
+                for b in cons_budgets
+                if b.line_descr and la_value in str(b.line_descr).lower()
+            ]
         ma = params.get("monetary_amount")
         if ma:
             try:
