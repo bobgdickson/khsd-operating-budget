@@ -168,10 +168,9 @@ try:
         df.fillna("", inplace=True)
         rows = df.to_dict(orient="records")
         headers = list(df.columns)
-        rows_json = json.dumps(rows)
         return templates.TemplateResponse(
             "construction_bulk_upload_preview.html",
-            {"request": request, "headers": headers, "rows": rows, "rows_json": rows_json},
+            {"request": request, "headers": headers, "rows": rows},
         )
 
     @router.post("/construction_budgets/bulk_upload", response_class=HTMLResponse)

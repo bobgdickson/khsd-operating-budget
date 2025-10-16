@@ -1,15 +1,24 @@
 <tr id="construction-budget-{{ budget.id }}">
-  <form hx-put="/construction_budgets/{{ budget.id }}" hx-target="#construction-budget-{{ budget.id }}" hx-swap="outerHTML">
-    <td><input type="text" name="budget_period" value="{{ budget.budget_period or '' }}" required/></td>
-    <td><input type="text" name="fund_code" value="{{ budget.fund_code or '' }}" required/></td>
-    <td><input type="text" name="program_code" value="{{ budget.program_code or '' }}" required/></td>
-    <td><input type="text" name="project_id" value="{{ budget.project_id or '' }}" required/></td>
-    <td><input type="text" name="activity_id" value="{{ budget.activity_id or '' }}" required/></td>
-    <td><input type="text" name="line_descr" value="{{ budget.line_descr or '' }}"/></td>
-    <td><input type="number" step="0.01" name="monetary_amount" value="{{ budget.monetary_amount or 0 }}" required/></td>
-    <td>
-      <button type="submit">Save</button>
-      <button type="button" hx-get="/construction_budgets/{{ budget.id }}/cancel" hx-target="#construction-budget-{{ budget.id }}" hx-swap="outerHTML">Cancel</button>
-    </td>
-  </form>
+  <td><input type="text" name="budget_period" value="{{ budget.budget_period or '' }}" required/></td>
+  <td><input type="text" name="fund_code" value="{{ budget.fund_code or '' }}" required/></td>
+  <td><input type="text" name="program_code" value="{{ budget.program_code or '' }}" required/></td>
+  <td><input type="text" name="project_id" value="{{ budget.project_id or '' }}" required/></td>
+  <td><input type="text" name="activity_id" value="{{ budget.activity_id or '' }}" required/></td>
+  <td><input type="text" name="line_descr" value="{{ budget.line_descr or '' }}"/></td>
+  <td><input type="number" step="0.01" name="monetary_amount" value="{{ budget.monetary_amount or 0 }}" required/></td>
+  <td>
+    <button
+      type="button"
+      hx-put="/construction_budgets/{{ budget.id }}"
+      hx-target="#construction-budget-{{ budget.id }}"
+      hx-include="closest tr"
+      hx-swap="outerHTML"
+    >Save</button>
+    <button
+      type="button"
+      hx-get="/construction_budgets/{{ budget.id }}/cancel"
+      hx-target="#construction-budget-{{ budget.id }}"
+      hx-swap="outerHTML"
+    >Cancel</button>
+  </td>
 </tr>

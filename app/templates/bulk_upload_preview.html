@@ -1,5 +1,5 @@
 <form id="bulk-upload-confirm-form" hx-post="/budgets/bulk_upload" hx-target="#budgets-table" hx-swap="beforeend">
-  <textarea name="rows_json" hidden>{{ rows_json }}</textarea>
+  <textarea name="rows_json" hidden>{{ rows|tojson }}</textarea>
   <button type="submit">Confirm Upload</button>
   <button type="button" hx-get="/budgets/bulk_upload/cancel" hx-target="#bulk-preview-container" hx-swap="innerHTML">Cancel</button>
 </form>

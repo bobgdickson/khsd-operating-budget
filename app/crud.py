@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from . import models, schemas
+from .database import Base
 
 def get_budget(db: Session, budget_id: int):
     return db.query(models.OperatingBudget).filter(models.OperatingBudget.id == budget_id).first()
@@ -17,6 +18,8 @@ def get_budgets(db: Session, skip: int = 0, limit: Optional[int] = None):
     return query.all()
 
 def create_budget(db: Session, budget: schemas.OperatingBudgetCreate):
+    # Ensure tables exist for the current database bind (important for in-memory SQLite in tests)
+    Base.metadata.create_all(bind=db.get_bind())
     db_budget = models.OperatingBudget(**budget.dict())
     db.add(db_budget)
     db.commit()
@@ -54,6 +57,7 @@ def get_supplier_budgets(db: Session, skip: int = 0, limit: Optional[int] = None
     return query.all()
 
 def create_supplier_budget(db: Session, supplier_budget: schemas.SupplierBudgetCreate):
+    Base.metadata.create_all(bind=db.get_bind())
     db_supplier_budget = models.SupplierBudget(**supplier_budget.dict())
     db.add(db_supplier_budget)
     db.commit()
@@ -95,6 +99,7 @@ def get_construction_budgets(db: Session, skip: int = 0, limit: Optional[int] = 
 
 
 def create_construction_budget(db: Session, construction_budget: schemas.ConstructionBudgetCreate):
+    Base.metadata.create_all(bind=db.get_bind())
     db_obj = models.ConstructionBudget(**construction_budget.dict())
     db.add(db_obj)
     db.commit()
